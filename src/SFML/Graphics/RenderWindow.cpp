@@ -44,7 +44,7 @@ RenderWindow::RenderWindow()
 RenderWindow::RenderWindow(VideoMode mode, const String& title, Uint32 style, const ContextSettings& settings)
 {
     // Don't call the base class constructor because it contains virtual function calls
-    create(mode, title, style, settings);
+    create(mode, title, style, &settings);
 }
 
 
@@ -52,7 +52,7 @@ RenderWindow::RenderWindow(VideoMode mode, const String& title, Uint32 style, co
 RenderWindow::RenderWindow(WindowHandle handle, const ContextSettings& settings)
 {
     // Don't call the base class constructor because it contains virtual function calls
-    create(handle, settings);
+    create(handle, &settings);
 }
 
 

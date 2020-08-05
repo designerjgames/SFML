@@ -58,6 +58,7 @@ bool RenderTexture::create(unsigned int width, unsigned int height, bool depthBu
 ////////////////////////////////////////////////////////////
 bool RenderTexture::create(unsigned int width, unsigned int height, const ContextSettings& settings)
 {
+#ifndef _BGFX
     // Create the texture
     if (!m_texture.create(width, height))
     {
@@ -92,6 +93,9 @@ bool RenderTexture::create(unsigned int width, unsigned int height, const Contex
     RenderTarget::initialize();
 
     return true;
+#else
+    return false;
+#endif
 }
 
 
@@ -160,6 +164,7 @@ bool RenderTexture::setActive(bool active)
 ////////////////////////////////////////////////////////////
 void RenderTexture::display()
 {
+#ifndef _BGFX
     // Update the target texture
     if (m_impl && (priv::RenderTextureImplFBO::isAvailable() || setActive(true)))
     {
@@ -167,6 +172,7 @@ void RenderTexture::display()
         m_texture.m_pixelsFlipped = true;
         m_texture.invalidateMipmap();
     }
+#endif
 }
 
 

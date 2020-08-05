@@ -58,7 +58,7 @@ m_context       (NULL),
 m_frameTimeLimit(Time::Zero),
 m_size          (0, 0)
 {
-    create(mode, title, style, settings);
+    create(mode, title, style, &settings);
 }
 
 
@@ -69,7 +69,7 @@ m_context       (NULL),
 m_frameTimeLimit(Time::Zero),
 m_size          (0, 0)
 {
-    create(handle, settings);
+    create(handle, &settings);
 }
 
 
@@ -81,7 +81,7 @@ Window::~Window()
 
 
 ////////////////////////////////////////////////////////////
-void Window::create(VideoMode mode, const String& title, Uint32 style, const ContextSettings& settings)
+void Window::create(VideoMode mode, const String& title, Uint32 style, const ContextSettings* settings /*=nullptr*/)
 {
     // Destroy the previous window implementation
     close();
@@ -124,7 +124,8 @@ void Window::create(VideoMode mode, const String& title, Uint32 style, const Con
     m_impl = priv::WindowImpl::create(mode, title, style, settings);
 
     // Recreate the context
-    m_context = priv::GlContext::create(settings, m_impl, mode.bitsPerPixel);
+    if( settings )
+        m_context = priv::GlContext::create(*settings, m_impl, mode.bitsPerPixel);
 
     // Perform common initializations
     initialize();
@@ -132,7 +133,7 @@ void Window::create(VideoMode mode, const String& title, Uint32 style, const Con
 
 
 ////////////////////////////////////////////////////////////
-void Window::create(WindowHandle handle, const ContextSettings& settings)
+void Window::create(WindowHandle handle, const ContextSettings* settings /*=nullptr*/)
 {
     // Destroy the previous window implementation
     close();
@@ -141,7 +142,8 @@ void Window::create(WindowHandle handle, const ContextSettings& settings)
     m_impl = priv::WindowImpl::create(handle);
 
     // Recreate the context
-    m_context = priv::GlContext::create(settings, m_impl, VideoMode::getDesktopMode().bitsPerPixel);
+    if( settings )
+        m_context = priv::GlContext::create(*settings, m_impl, VideoMode::getDesktopMode().bitsPerPixel);
 
     // Perform common initializations
     initialize();

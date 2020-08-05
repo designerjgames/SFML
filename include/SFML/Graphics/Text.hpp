@@ -412,6 +412,20 @@ public:
     ////////////////////////////////////////////////////////////
     FloatRect getGlobalBounds() const;
 
+#ifdef _BGFX
+    const VertexArray& GetVertices() const { return m_vertices; }
+    const Texture&     GetTexture()  const { return m_font->getTexture(m_characterSize); }
+#endif
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Make sure the text's geometry is updated
+    ///
+    /// All the attributes related to rendering are cached, such
+    /// that the geometry is only updated when necessary.
+    ///
+    ////////////////////////////////////////////////////////////
+    void ensureGeometryUpdate() const;
+
 private:
 
     ////////////////////////////////////////////////////////////
@@ -422,15 +436,6 @@ private:
     ///
     ////////////////////////////////////////////////////////////
     virtual void draw(RenderTarget& target, RenderStates states) const;
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Make sure the text's geometry is updated
-    ///
-    /// All the attributes related to rendering are cached, such
-    /// that the geometry is only updated when necessary.
-    ///
-    ////////////////////////////////////////////////////////////
-    void ensureGeometryUpdate() const;
 
     ////////////////////////////////////////////////////////////
     // Member data

@@ -32,6 +32,9 @@
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Window/GlResource.hpp>
 
+#ifdef _BGFX
+#include "bgfx\bgfx.h"
+#endif
 
 namespace sf
 {
@@ -538,6 +541,10 @@ public:
     ////////////////////////////////////////////////////////////
     unsigned int getNativeHandle() const;
 
+#ifdef _BGFX
+    bgfx::TextureHandle getTexture() const { return m_texture; }
+#endif
+
     ////////////////////////////////////////////////////////////
     /// \brief Bind a texture for rendering
     ///
@@ -618,7 +625,11 @@ private:
     ////////////////////////////////////////////////////////////
     Vector2u     m_size;          ///< Public texture size
     Vector2u     m_actualSize;    ///< Actual texture size (can be greater than public size because of padding)
+#ifndef _BGFX
     unsigned int m_texture;       ///< Internal texture identifier
+#else
+    bgfx::TextureHandle m_texture;
+#endif
     bool         m_isSmooth;      ///< Status of the smooth filter
     bool         m_sRgb;          ///< Should the texture source be converted from sRGB?
     bool         m_isRepeated;    ///< Is the texture in repeat mode?

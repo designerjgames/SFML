@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
+// Copyright (C) 2007-2019 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -38,7 +38,7 @@
 // Identify the operating system
 // see http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
 ////////////////////////////////////////////////////////////
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined __SWITCH__
 
     // Windows
     #define SFML_SYSTEM_WINDOWS
@@ -91,16 +91,16 @@
         // OpenBSD
         #define SFML_SYSTEM_OPENBSD
 
-    #elif defined(SWITCH)
-
-        #define SFML_SYSTEM_SWITCH
-
     #else
 
         // Unsupported UNIX system
         #error This UNIX operating system is not supported by SFML library
 
     #endif
+
+#elif defined(__SWITCH__)
+
+    #define SFML_SYSTEM_SWITCH
 
 #else
 

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
+// Copyright (C) 2007-2019 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -36,9 +36,7 @@
 #include <SFML/System/Err.hpp>
 #include <cassert>
 #include <cstring>
-#ifdef _BGFX
-#include "bx\math.h"
-#endif
+
 
 namespace
 {
@@ -64,11 +62,7 @@ namespace sf
 Texture::Texture() :
 m_size         (0, 0),
 m_actualSize   (0, 0),
-#ifndef _BGFX
 m_texture      (0),
-#else
-m_texture(),
-#endif
 m_isSmooth     (false),
 m_sRgb         (false),
 m_isRepeated   (false),
@@ -84,11 +78,7 @@ m_cacheId      (getUniqueId())
 Texture::Texture(const Texture& copy) :
 m_size         (0, 0),
 m_actualSize   (0, 0),
-#ifndef _BGFX
-m_texture(0),
-#else
-m_texture(),
-#endif
+m_texture      (0),
 m_isSmooth     (copy.m_isSmooth),
 m_sRgb         (copy.m_sRgb),
 m_isRepeated   (copy.m_isRepeated),
@@ -97,30 +87,23 @@ m_fboAttachment(false),
 m_hasMipmap    (false),
 m_cacheId      (getUniqueId())
 {
-#ifndef _BGFX
     if (copy.m_texture)
     {
         if (create(copy.getSize().x, copy.getSize().y))
         {
             update(copy);
-
-            // Force an OpenGL flush, so that the texture will appear updated
-            // in all contexts immediately (solves problems in multi-threaded apps)
-            glCheck(glFlush());
         }
         else
         {
             err() << "Failed to copy texture, failed to create new texture" << std::endl;
         }
     }
-#endif
 }
 
 
 ////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
-#ifndef _BGFX
     // Destroy the OpenGL texture
     if (m_texture)
     {
@@ -129,19 +112,12 @@ Texture::~Texture()
         GLuint texture = static_cast<GLuint>(m_texture);
         glCheck(glDeleteTextures(1, &texture));
     }
-#else
-    if (bgfx::isValid(m_texture))
-        bgfx::destroy(m_texture);
-
-    m_texture.idx = bgfx::kInvalidHandle;
-#endif
 }
 
 
 ////////////////////////////////////////////////////////////
 bool Texture::create(unsigned int width, unsigned int height)
 {
-#ifndef _BGFX
     // Check if texture parameters are valid before creating it
     if ((width == 0) || (height == 0))
     {
@@ -186,7 +162,7 @@ bool Texture::create(unsigned int width, unsigned int height)
     // Make sure that the current texture binding will be preserved
     priv::TextureSaver save;
 
-    static bool textureEdgeClamp = GLEXT_texture_edge_clamp || GLEXT_EXT_texture_edge_clamp;
+    static bool textureEdgeClamp = GLEXT_texture_edge_clamp;
 
     if (!m_isRepeated && !textureEdgeClamp)
     {
@@ -233,50 +209,6 @@ bool Texture::create(unsigned int width, unsigned int height)
     m_cacheId = getUniqueId();
 
     m_hasMipmap = false;
-#else
-    // Check if texture parameters are valid before creating it
-    if ((width == 0) || (height == 0))
-    {
-        err() << "Failed to create texture, invalid size (" << width << "x" << height << ")" << std::endl;
-        return false;
-    }
-
-    // Compute the internal texture dimensions depending on NPOT textures support
-    Vector2u actualSize(getValidSize(width), getValidSize(height));
-
-    // Check the maximum texture size
-    unsigned int maxSize = getMaximumSize();
-    if ((actualSize.x > maxSize) || (actualSize.y > maxSize))
-    {
-        err() << "Failed to create texture, its internal size is too high "
-            << "(" << actualSize.x << "x" << actualSize.y << ", "
-            << "maximum is " << maxSize << "x" << maxSize << ")"
-            << std::endl;
-        return false;
-    }
-
-    // All the validity checks passed, we can store the new texture settings
-    m_size.x = width;
-    m_size.y = height;
-    m_actualSize = actualSize;
-    m_pixelsFlipped = false;
-    m_fboAttachment = false;
-
-
-    const uint64_t flags = 0
-        | BGFX_SAMPLER_U_CLAMP
-        | BGFX_SAMPLER_V_CLAMP
-        | BGFX_SAMPLER_POINT
-        | BGFX_TEXTURE_BLIT_DST
-        ;
-
-    m_texture   = bgfx::createTexture2D(m_size.x, m_size.y, false, 1, bgfx::TextureFormat::RGBA8, flags, nullptr);
-
-    m_cacheId   = getUniqueId();
-
-    m_hasMipmap = false;
-
-#endif
 
     return true;
 }
@@ -343,7 +275,6 @@ bool Texture::loadFromImage(const Image& image, const IntRect& area)
         // Create the texture and upload the pixels
         if (create(rectangle.width, rectangle.height))
         {
-#ifndef _BGFX
             TransientContextLock lock;
 
             // Make sure that the current texture binding will be preserved
@@ -366,30 +297,6 @@ bool Texture::loadFromImage(const Image& image, const IntRect& area)
             glCheck(glFlush());
 
             return true;
-#else
-            const uint32_t flags = 0
-                | BGFX_SAMPLER_U_CLAMP
-                | BGFX_SAMPLER_V_CLAMP
-                | BGFX_SAMPLER_POINT
-                ;
-
-            const Uint8* pixels = image.getPixelsPtr() + 4 * (rectangle.left + (width * rectangle.top));
-            for (int i = 0; i < rectangle.height; ++i)
-            {
-                // Using makeRef to pass texture memory without copying.
-                //const bgfx::Memory* mem = bgfx::makeRef(pixels, width * 1 * 4);
-
-                //bgfx::updateTexture2D(m_texture, 0, 0, 0, i, width, height, mem);
-
-                bgfx::updateTexture2D(m_texture, 0, 0, 0, i, width, 1, bgfx::copy(pixels, width * 1 * 4));
-
-                pixels += 4 * width;
-            }
-
-            m_hasMipmap = false;
-
-            return true;
-#endif
         }
         else
         {
@@ -409,7 +316,6 @@ Vector2u Texture::getSize() const
 ////////////////////////////////////////////////////////////
 Image Texture::copyToImage() const
 {
-#ifndef _BGFX
     // Easy case: empty texture
     if (!m_texture)
         return Image();
@@ -486,9 +392,6 @@ Image Texture::copyToImage() const
     image.create(m_size.x, m_size.y, &pixels[0]);
 
     return image;
-#else
-    return Image();
-#endif
 }
 
 
@@ -506,7 +409,6 @@ void Texture::update(const Uint8* pixels, unsigned int width, unsigned int heigh
     assert(x + width <= m_size.x);
     assert(y + height <= m_size.y);
 
-#ifndef _BGFX
     if (pixels && m_texture)
     {
         TransientContextLock lock;
@@ -526,21 +428,6 @@ void Texture::update(const Uint8* pixels, unsigned int width, unsigned int heigh
         // in all contexts immediately (solves problems in multi-threaded apps)
         glCheck(glFlush());
     }
-#else
-    if (pixels && bgfx::isValid(m_texture))
-    {
-        // Using makeRef to pass texture memory without copying.
-      //  const bgfx::Memory* mem = bgfx::makeRef(pixels, width * height * 4);
-
-       // bgfx::updateTexture2D(m_texture, 0, 0, x, y, width, height, mem);
-
-        bgfx::updateTexture2D(m_texture, 0, 0, x, y, width, height, bgfx::copy(pixels, width * height * 4));
-
-        m_hasMipmap = false;
-        m_pixelsFlipped = false;
-        m_cacheId = getUniqueId();
-    }
-#endif
 }
 
 
@@ -558,7 +445,6 @@ void Texture::update(const Texture& texture, unsigned int x, unsigned int y)
     assert(x + texture.m_size.x <= m_size.x);
     assert(y + texture.m_size.y <= m_size.y);
 
-#ifndef _BGFX
     if (!m_texture || !texture.m_texture)
         return;
 
@@ -651,38 +537,6 @@ void Texture::update(const Texture& texture, unsigned int x, unsigned int y)
 #endif // SFML_OPENGL_ES
 
     update(texture.copyToImage(), x, y);
-#else
-   // bgfx::blit(0, m_texture, 0, x, y, 0, texture.m_texture, 0, 0, 0, 0, texture.getSize().x, texture.getSize().y);
-
-
-    //const bx::Vec3 at = { static_cast<float>(texture.m_size.x * 0.5f), static_cast<float>(texture.m_size.y * 0.5f),  static_cast<float>(0.0f) };
-    //const bx::Vec3 eye = { 0.0f									    , 0.0f									      , -1.0f };
-
-    //float view[16];
-    //bx::mtxLookAt(view, eye, at);
-
-    //// Setup a top-left ortho matrix for screen space drawing.
-    //const bgfx::Caps* caps = bgfx::getCaps();
-    //{
-    //    float ortho[16];
-    //    bx::mtxOrtho(ortho, 1.0f, texture.m_size.x, texture.m_size.y, 1.0f, 0.0f, 100.0f, 0.0f, caps->homogeneousDepth);
-
-    //    // Set view and projection matrix for view.
-    //    bgfx::setViewTransform(200, NULL, ortho);
-    //}
-
-    ////Set the viewport
-    //bgfx::setViewRect(200, 0, 0, static_cast<uint16_t>(texture.m_size.x), static_cast<uint16_t>(texture.m_size.y));
-
-    bgfx::blit(0, m_texture, x, y, texture.m_texture, 0, 0, texture.m_size.x, texture.m_size.y);
-    bgfx::frame();
-    //bgfx::touch(200);
-    //bgfx::blit(0, texture.m_texture, 0, 0, m_texture, x, y, getSize().x, getSize().y);
-
-    m_hasMipmap = false;
-    m_pixelsFlipped = false;
-    m_cacheId = getUniqueId();
-#endif
 }
 
 
@@ -711,7 +565,6 @@ void Texture::update(const Window& window)
 ////////////////////////////////////////////////////////////
 void Texture::update(const Window& window, unsigned int x, unsigned int y)
 {
-#ifndef _BGFX
     assert(x + window.getSize().x <= m_size.x);
     assert(y + window.getSize().y <= m_size.y);
 
@@ -734,14 +587,12 @@ void Texture::update(const Window& window, unsigned int x, unsigned int y)
         // in all contexts immediately (solves problems in multi-threaded apps)
         glCheck(glFlush());
     }
-#endif
 }
 
 
 ////////////////////////////////////////////////////////////
 void Texture::setSmooth(bool smooth)
 {
-#ifndef _BGFX
     if (smooth != m_isSmooth)
     {
         m_isSmooth = smooth;
@@ -766,7 +617,6 @@ void Texture::setSmooth(bool smooth)
             }
         }
     }
-#endif
 }
 
 
@@ -794,7 +644,6 @@ bool Texture::isSrgb() const
 ////////////////////////////////////////////////////////////
 void Texture::setRepeated(bool repeated)
 {
-#ifndef _BGFX
     if (repeated != m_isRepeated)
     {
         m_isRepeated = repeated;
@@ -806,7 +655,7 @@ void Texture::setRepeated(bool repeated)
             // Make sure that the current texture binding will be preserved
             priv::TextureSaver save;
 
-            static bool textureEdgeClamp = GLEXT_texture_edge_clamp || GLEXT_EXT_texture_edge_clamp;
+            static bool textureEdgeClamp = GLEXT_texture_edge_clamp;
 
             if (!m_isRepeated && !textureEdgeClamp)
             {
@@ -827,7 +676,6 @@ void Texture::setRepeated(bool repeated)
             glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_isRepeated ? GL_REPEAT : (textureEdgeClamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
         }
     }
-#endif
 }
 
 
@@ -841,7 +689,6 @@ bool Texture::isRepeated() const
 ////////////////////////////////////////////////////////////
 bool Texture::generateMipmap()
 {
-#ifndef _BGFX
     if (!m_texture)
         return false;
 
@@ -863,16 +710,12 @@ bool Texture::generateMipmap()
     m_hasMipmap = true;
 
     return true;
-#else
-    return false;
-#endif
 }
 
 
 ////////////////////////////////////////////////////////////
 void Texture::invalidateMipmap()
 {
-#ifndef _BGFX
     if (!m_hasMipmap)
         return;
 
@@ -885,14 +728,12 @@ void Texture::invalidateMipmap()
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_isSmooth ? GL_LINEAR : GL_NEAREST));
 
     m_hasMipmap = false;
-#endif
 }
 
 
 ////////////////////////////////////////////////////////////
 void Texture::bind(const Texture* texture, CoordinateType coordinateType)
 {
-#ifndef _BGFX
     TransientContextLock lock;
 
     if (texture && texture->m_texture)
@@ -943,7 +784,6 @@ void Texture::bind(const Texture* texture, CoordinateType coordinateType)
         // Go back to model-view mode (sf::RenderTarget relies on it)
         glCheck(glMatrixMode(GL_MODELVIEW));
     }
-#endif
 }
 
 
@@ -1000,11 +840,7 @@ void Texture::swap(Texture& right)
 ////////////////////////////////////////////////////////////
 unsigned int Texture::getNativeHandle() const
 {
-#ifndef _BGFX
     return m_texture;
-#else
-    return 0;
-#endif
 }
 
 

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
+// Copyright (C) 2007-2019 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -74,7 +74,6 @@ SoundFileReader* SoundFileFactory::createReaderFromFilename(const std::string& f
         err() << "Failed to open sound file \"" << filename << "\" (couldn't open stream)" << std::endl;
         return NULL;
     }
-
     // Test the filename in all the registered factories
     for (ReaderFactoryArray::const_iterator it = s_readers.begin(); it != s_readers.end(); ++it)
     {

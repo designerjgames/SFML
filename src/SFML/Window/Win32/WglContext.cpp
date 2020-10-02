@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
+// Copyright (C) 2007-2019 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -25,8 +25,8 @@
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
+#define SF_GLAD_WGL_IMPLEMENTATION
 #include <SFML/Window/WindowImpl.hpp> // included first to avoid a warning about macro redefinition
-#include <SFML/OpenGL.hpp> // included second to avoid an error in WglExtensions.hpp
 #include <SFML/Window/Win32/WglContext.hpp>
 #include <SFML/System/ThreadLocalPtr.hpp>
 #include <SFML/System/Lock.hpp>
@@ -41,6 +41,34 @@ namespace
     // Some drivers are bugged and don't track the current HDC/HGLRC properly
     // In order to deactivate successfully, we need to track it ourselves as well
     sf::ThreadLocalPtr<sf::priv::WglContext> currentContext(NULL);
+
+
+    ////////////////////////////////////////////////////////////
+    void ensureInit()
+    {
+        static bool initialized = false;
+        if (!initialized)
+        {
+            initialized = true;
+
+            gladLoadWGL(NULL, sf::priv::WglContext::getFunction);
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////
+    void ensureExtensionsInit(HDC deviceContext)
+    {
+        static bool initialized = false;
+        if (!initialized)
+        {
+            initialized = true;
+
+            // We don't check the return value since the extension
+            // flags are cleared even if loading fails
+            gladLoadWGL(deviceContext, sf::priv::WglContext::getFunction);
+        }
+    }
 }
 
 
@@ -49,30 +77,19 @@ namespace sf
 namespace priv
 {
 ////////////////////////////////////////////////////////////
-void ensureExtensionsInit(HDC deviceContext)
-{
-    static bool initialized = false;
-    if (!initialized)
-    {
-        initialized = true;
-
-        // We don't check the return value since the extension
-        // flags are cleared even if loading fails
-        sfwgl_LoadFunctions(deviceContext);
-    }
-}
-
-
-////////////////////////////////////////////////////////////
 String getErrorString(DWORD errorCode)
 {
-    std::basic_ostringstream<TCHAR, std::char_traits<TCHAR> > ss;
-    TCHAR errBuff[256];
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, errorCode, 0, errBuff, sizeof(errBuff), NULL);
-    ss << errBuff;
-    String errMsg(ss.str());
+    PTCHAR buffer;
+    if (FormatMessage(FORMAT_MESSAGE_MAX_WIDTH_MASK | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, errorCode, 0, reinterpret_cast<LPTSTR>(&buffer), 256, NULL) != 0)
+    {
+        String errMsg(buffer);
+        LocalFree(buffer);
+        return errMsg;
+    }
 
-    return errMsg;
+    std::ostringstream ss;
+    ss << "Error " << errorCode;
+    return String(ss.str());
 }
 
 
@@ -84,20 +101,18 @@ m_deviceContext(NULL),
 m_context      (NULL),
 m_ownsWindow   (false)
 {
+    ensureInit();
+
+    // TODO: Delegate to the other constructor in C++11
+
     // Save the creation settings
     m_settings = ContextSettings();
-
-    // Make sure that extensions are initialized if this is not the shared context
-    // The shared context is the context used to initialize the extensions
-    if (shared && shared->m_deviceContext)
-        ensureExtensionsInit(shared->m_deviceContext);
 
     // Create the rendering surface (window or pbuffer if supported)
     createSurface(shared, 1, 1, VideoMode::getDesktopMode().bitsPerPixel);
 
     // Create the context
-    if (m_deviceContext)
-        createContext(shared);
+    createContext(shared);
 }
 
 
@@ -109,20 +124,16 @@ m_deviceContext(NULL),
 m_context      (NULL),
 m_ownsWindow   (false)
 {
+    ensureInit();
+
     // Save the creation settings
     m_settings = settings;
 
-    // Make sure that extensions are initialized if this is not the shared context
-    // The shared context is the context used to initialize the extensions
-    if (shared && shared->m_deviceContext)
-        ensureExtensionsInit(shared->m_deviceContext);
-
     // Create the rendering surface from the owner window
-    createSurface(owner->getSystemHandle(), bitsPerPixel);
+    createSurface(static_cast<HWND>(owner->getSystemHandle()), bitsPerPixel);
 
     // Create the context
-    if (m_deviceContext)
-        createContext(shared);
+    createContext(shared);
 }
 
 
@@ -134,20 +145,16 @@ m_deviceContext(NULL),
 m_context      (NULL),
 m_ownsWindow   (false)
 {
+    ensureInit();
+
     // Save the creation settings
     m_settings = settings;
-
-    // Make sure that extensions are initialized if this is not the shared context
-    // The shared context is the context used to initialize the extensions
-    if (shared && shared->m_deviceContext)
-        ensureExtensionsInit(shared->m_deviceContext);
 
     // Create the rendering surface (window or pbuffer if supported)
     createSurface(shared, width, height, VideoMode::getDesktopMode().bitsPerPixel);
 
     // Create the context
-    if (m_deviceContext)
-        createContext(shared);
+    createContext(shared);
 }
 
 
@@ -247,7 +254,7 @@ void WglContext::setVerticalSyncEnabled(bool enabled)
     // Make sure that extensions are initialized
     ensureExtensionsInit(m_deviceContext);
 
-    if (sfwgl_ext_EXT_swap_control == sfwgl_LOAD_SUCCEEDED)
+    if (SF_GLAD_WGL_EXT_swap_control)
     {
         if (wglSwapIntervalEXT(enabled ? 1 : 0) == FALSE)
             err() << "Setting vertical sync failed: " << getErrorString(GetLastError()).toAnsiString() << std::endl;
@@ -270,9 +277,11 @@ void WglContext::setVerticalSyncEnabled(bool enabled)
 ////////////////////////////////////////////////////////////
 int WglContext::selectBestPixelFormat(HDC deviceContext, unsigned int bitsPerPixel, const ContextSettings& settings, bool pbuffer)
 {
+    ensureInit();
+
     // Let's find a suitable pixel format -- first try with wglChoosePixelFormatARB
     int bestFormat = 0;
-    if (sfwgl_ext_ARB_pixel_format == sfwgl_LOAD_SUCCEEDED)
+    if (SF_GLAD_WGL_ARB_pixel_format)
     {
         // Define the basic attributes we want for our window
         int intAttributes[] =
@@ -318,7 +327,7 @@ int WglContext::selectBestPixelFormat(HDC deviceContext, unsigned int bitsPerPix
                 }
 
                 int sampleValues[2] = {0, 0};
-                if (sfwgl_ext_ARB_multisample == sfwgl_LOAD_SUCCEEDED)
+                if (SF_GLAD_WGL_ARB_multisample)
                 {
                     const int sampleAttributes[] =
                     {
@@ -334,7 +343,7 @@ int WglContext::selectBestPixelFormat(HDC deviceContext, unsigned int bitsPerPix
                 }
 
                 int sRgbCapableValue = 0;
-                if ((sfwgl_ext_ARB_framebuffer_sRGB == sfwgl_LOAD_SUCCEEDED) || (sfwgl_ext_EXT_framebuffer_sRGB == sfwgl_LOAD_SUCCEEDED))
+                if (SF_GLAD_WGL_ARB_framebuffer_sRGB || SF_GLAD_WGL_EXT_framebuffer_sRGB)
                 {
                     const int sRgbCapableAttribute = WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB;
 
@@ -455,7 +464,7 @@ void WglContext::updateSettingsFromPixelFormat()
         return;
     }
 
-    if (sfwgl_ext_ARB_pixel_format == sfwgl_LOAD_SUCCEEDED)
+    if (SF_GLAD_WGL_ARB_pixel_format)
     {
         const int attributes[] = {WGL_DEPTH_BITS_ARB, WGL_STENCIL_BITS_ARB};
         int values[2];
@@ -472,7 +481,7 @@ void WglContext::updateSettingsFromPixelFormat()
             m_settings.stencilBits = actualFormat.cStencilBits;
         }
 
-        if (sfwgl_ext_ARB_multisample == sfwgl_LOAD_SUCCEEDED)
+        if (SF_GLAD_WGL_ARB_multisample)
         {
             const int sampleAttributes[] = {WGL_SAMPLE_BUFFERS_ARB, WGL_SAMPLES_ARB};
             int sampleValues[2];
@@ -492,7 +501,7 @@ void WglContext::updateSettingsFromPixelFormat()
             m_settings.antialiasingLevel = 0;
         }
 
-        if ((sfwgl_ext_ARB_framebuffer_sRGB == sfwgl_LOAD_SUCCEEDED) || (sfwgl_ext_EXT_framebuffer_sRGB == sfwgl_LOAD_SUCCEEDED))
+        if (SF_GLAD_WGL_ARB_framebuffer_sRGB || SF_GLAD_WGL_EXT_framebuffer_sRGB)
         {
             const int sRgbCapableAttribute = WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB;
             int sRgbCapableValue = 0;
@@ -525,7 +534,7 @@ void WglContext::updateSettingsFromPixelFormat()
 void WglContext::createSurface(WglContext* shared, unsigned int width, unsigned int height, unsigned int bitsPerPixel)
 {
     // Check if the shared context already exists and pbuffers are supported
-    if (shared && shared->m_deviceContext && (sfwgl_ext_ARB_pbuffer == sfwgl_LOAD_SUCCEEDED))
+    if (shared && shared->m_deviceContext && SF_GLAD_WGL_ARB_pbuffer)
     {
         int bestFormat = selectBestPixelFormat(shared->m_deviceContext, bitsPerPixel, m_settings, true);
 
@@ -594,6 +603,10 @@ void WglContext::createSurface(HWND window, unsigned int bitsPerPixel)
 ////////////////////////////////////////////////////////////
 void WglContext::createContext(WglContext* shared)
 {
+    // We can't create an OpenGL context if we don't have a DC
+    if (!m_deviceContext)
+        return;
+
     // Get a working copy of the context settings
     ContextSettings settings = m_settings;
 
@@ -603,7 +616,7 @@ void WglContext::createContext(WglContext* shared)
     // Create the OpenGL context -- first try using wglCreateContextAttribsARB
     while (!m_context && m_settings.majorVersion)
     {
-        if (sfwgl_ext_ARB_create_context == sfwgl_LOAD_SUCCEEDED)
+        if (SF_GLAD_WGL_ARB_create_context)
         {
             std::vector<int> attributes;
 
@@ -617,7 +630,7 @@ void WglContext::createContext(WglContext* shared)
             }
 
             // Check if setting the profile is supported
-            if (sfwgl_ext_ARB_create_context_profile == sfwgl_LOAD_SUCCEEDED)
+            if (SF_GLAD_WGL_ARB_create_context_profile)
             {
                 int profile = (m_settings.attributeFlags & ContextSettings::Core) ? WGL_CONTEXT_CORE_PROFILE_BIT_ARB : WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB;
                 int debug = (m_settings.attributeFlags & ContextSettings::Debug) ? WGL_CONTEXT_DEBUG_BIT_ARB : 0;
@@ -729,6 +742,15 @@ void WglContext::createContext(WglContext* shared)
             if (wglShareLists(sharedContext, m_context) == FALSE)
                 err() << "Failed to share the OpenGL context: " << getErrorString(GetLastError()).toAnsiString() << std::endl;
         }
+    }
+
+    // If we are the shared context, initialize extensions now
+    // This enables us to re-create the shared context using extensions if we need to
+    if (!shared && m_context)
+    {
+        makeCurrent(true);
+        ensureExtensionsInit(m_deviceContext);
+        makeCurrent(false);
     }
 }
 

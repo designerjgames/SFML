@@ -58,6 +58,20 @@ if(SFML_OS_WINDOWS)
         ${SRCROOT}/Win32/ThreadLocalImpl.hpp
     )
     source_group("windows" FILES ${PLATFORM_SRC})
+elseif(SFML_OS_SWITCH)
+    set(PLATFORM_SRC
+        ${SRCROOT}/Switch/ClockImpl.cpp
+        ${SRCROOT}/Switch/ClockImpl.hpp
+        ${SRCROOT}/Switch/MutexImpl.cpp
+        ${SRCROOT}/Switch/MutexImpl.hpp
+        ${SRCROOT}/Switch/SleepImpl.cpp
+        ${SRCROOT}/Switch/SleepImpl.hpp
+        ${SRCROOT}/Switch/ThreadImpl.cpp
+        ${SRCROOT}/Switch/ThreadImpl.hpp
+        ${SRCROOT}/Switch/ThreadLocalImpl.cpp
+        ${SRCROOT}/Switch/ThreadLocalImpl.hpp
+    )
+    source_group("switch" FILES ${PLATFORM_SRC})
 else()
     set(PLATFORM_SRC
         ${SRCROOT}/Unix/ClockImpl.cpp
@@ -88,6 +102,11 @@ endif()
 # define the sfml-system target
 sfml_add_library(sfml-system
                  SOURCES ${SRC} ${PLATFORM_SRC})
+
+if(SFML_OS_ANDROID)
+    # glad sources
+    target_include_directories(sfml-system PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/glad/include")
+endif()
 
 # setup dependencies
 if(SFML_OS_LINUX OR SFML_OS_FREEBSD OR SFML_OS_MACOSX)

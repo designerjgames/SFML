@@ -43,6 +43,32 @@
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WindowImplWin32.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Vulkan.cpp" />
+    <ClCompile Include="..\..\..\..\src\SFML\Window\WindowBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Win32\VulkanImplWin32.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\JoystickImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\SensorImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\VideoModeImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\WindowImplSwitch.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\ClipboardImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\CursorImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\InputImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Programming\Build2\SFML\include\SFML\Window\Clipboard.hpp" />
@@ -95,6 +121,29 @@
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WindowImplWin32.hpp">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\SFML\Window\WindowBase.hpp" />
+    <ClInclude Include="..\..\..\..\include\SFML\Window\Vulkan.hpp" />
+    <ClInclude Include="..\..\..\..\src\SFML\Window\Win32\VulkanImplWin32.hpp">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\JoystickImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\SensorImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\WindowImplSwitch.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\ClipboardImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\CursorImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\InputImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Programming\Build2\SFML\src\SFML\Window\CMakeLists.txt" />
@@ -102,6 +151,9 @@
   <ItemGroup>
     <Filter Include="windows">
       <UniqueIdentifier>{76568698-010A-349C-B36D-DC77DBB6CF85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="switch">
+      <UniqueIdentifier>{9e2a5dee-73e9-46df-80d1-e05e6bf2cf68}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -63,15 +63,17 @@ elseif(SFML_OS_MACOSX)
 elseif(SFML_OS_ANDROID)
     set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "${PROJECT_SOURCE_DIR}/extlibs/headers/AL")
     set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "${PROJECT_SOURCE_DIR}/extlibs/android")
+elseif(SFML_OS_SWITCH)
+    include_directories("${PROJECT_SOURCE_DIR}/extlibs/headers/AL")
 endif()
 
 # find external libraries
 sfml_find_package(OpenAL INCLUDE "OPENAL_INCLUDE_DIR" LINK "OPENAL_LIBRARY")
-sfml_find_package(Vorbis INCLUDE "VORBIS_INCLUDE_DIRS" LINK "VORBIS_LIBRARIES")
+sfml_find_package(VORBIS INCLUDE "VORBIS_INCLUDE_DIRS" LINK "VORBIS_LIBRARIES")
 sfml_find_package(FLAC INCLUDE "FLAC_INCLUDE_DIR" LINK "FLAC_LIBRARY")
 
 # avoids warnings in vorbisfile.h
-target_compile_definitions(Vorbis INTERFACE "OV_EXCLUDE_STATIC_CALLBACKS")
+target_compile_definitions(VORBIS INTERFACE "OV_EXCLUDE_STATIC_CALLBACKS")
 target_compile_definitions(FLAC INTERFACE "FLAC__NO_DLL")
 
 # define the sfml-audio target
@@ -87,4 +89,4 @@ endif()
 
 target_link_libraries(sfml-audio
                       PUBLIC sfml-system
-                      PRIVATE Vorbis FLAC)
+                      PRIVATE VORBIS FLAC)

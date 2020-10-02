@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2018 Marco Antognini (antognini.marco@gmail.com),
+// Copyright (C) 2007-2019 Marco Antognini (antognini.marco@gmail.com),
 //                         Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
@@ -42,6 +42,7 @@ namespace priv
 
 ////////////////////////////////////////////////////////////
 SFContext::SFContext(SFContext* shared) :
+m_context(0),
 m_view(0),
 m_window(0)
 {
@@ -58,6 +59,7 @@ m_window(0)
 ////////////////////////////////////////////////////////////
 SFContext::SFContext(SFContext* shared, const ContextSettings& settings,
                      const WindowImpl* owner, unsigned int bitsPerPixel) :
+m_context(0),
 m_view(0),
 m_window(0)
 {
@@ -76,6 +78,7 @@ m_window(0)
 ////////////////////////////////////////////////////////////
 SFContext::SFContext(SFContext* shared, const ContextSettings& settings,
                      unsigned int width, unsigned int height) :
+m_context(0),
 m_view(0),
 m_window(0)
 {

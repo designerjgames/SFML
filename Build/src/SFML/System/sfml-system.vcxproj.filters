@@ -27,6 +27,21 @@
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\System\Win32\ThreadLocalImpl.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\System\Switch\SleepImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\System\Switch\ThreadImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\System\Switch\ThreadLocalImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\System\Switch\ClockImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\System\Switch\MutexImpl.cpp">
+      <Filter>switch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Programming\Build2\SFML\include\SFML\System\Clock.hpp" />
@@ -69,6 +84,21 @@
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\System\Win32\ThreadLocalImpl.hpp">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\System\Switch\MutexImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\System\Switch\SleepImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\System\Switch\ThreadImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\System\Switch\ThreadLocalImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\System\Switch\ClockImpl.hpp">
+      <Filter>switch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Programming\Build2\SFML\src\SFML\System\CMakeLists.txt" />
@@ -76,6 +106,9 @@
   <ItemGroup>
     <Filter Include="windows">
       <UniqueIdentifier>{76568698-010A-349C-B36D-DC77DBB6CF85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="switch">
+      <UniqueIdentifier>{415c963e-a450-4789-a142-61314cf63042}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

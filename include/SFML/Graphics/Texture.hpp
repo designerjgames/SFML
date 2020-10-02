@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
+// Copyright (C) 2007-2019 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -32,9 +32,6 @@
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Window/GlResource.hpp>
 
-#ifdef _BGFX
-#include "bgfx\bgfx.h"
-#endif
 
 namespace sf
 {
@@ -58,8 +55,8 @@ public:
     ////////////////////////////////////////////////////////////
     enum CoordinateType
     {
-        Normalized, ///< Texture coordinates in range [0 .. 1]
-        Pixels      ///< Texture coordinates in range [0 .. size]
+        Normalized, //!< Texture coordinates in range [0 .. 1]
+        Pixels      //!< Texture coordinates in range [0 .. size]
     };
 
 public:
@@ -541,10 +538,6 @@ public:
     ////////////////////////////////////////////////////////////
     unsigned int getNativeHandle() const;
 
-#ifdef _BGFX
-    bgfx::TextureHandle getTexture() const { return m_texture; }
-#endif
-
     ////////////////////////////////////////////////////////////
     /// \brief Bind a texture for rendering
     ///
@@ -623,20 +616,16 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Vector2u     m_size;          ///< Public texture size
-    Vector2u     m_actualSize;    ///< Actual texture size (can be greater than public size because of padding)
-#ifndef _BGFX
-    unsigned int m_texture;       ///< Internal texture identifier
-#else
-    bgfx::TextureHandle m_texture;
-#endif
-    bool         m_isSmooth;      ///< Status of the smooth filter
-    bool         m_sRgb;          ///< Should the texture source be converted from sRGB?
-    bool         m_isRepeated;    ///< Is the texture in repeat mode?
-    mutable bool m_pixelsFlipped; ///< To work around the inconsistency in Y orientation
-    bool         m_fboAttachment; ///< Is this texture owned by a framebuffer object?
-    bool         m_hasMipmap;     ///< Has the mipmap been generated?
-    Uint64       m_cacheId;       ///< Unique number that identifies the texture to the render target's cache
+    Vector2u     m_size;          //!< Public texture size
+    Vector2u     m_actualSize;    //!< Actual texture size (can be greater than public size because of padding)
+    unsigned int m_texture;       //!< Internal texture identifier
+    bool         m_isSmooth;      //!< Status of the smooth filter
+    bool         m_sRgb;          //!< Should the texture source be converted from sRGB?
+    bool         m_isRepeated;    //!< Is the texture in repeat mode?
+    mutable bool m_pixelsFlipped; //!< To work around the inconsistency in Y orientation
+    bool         m_fboAttachment; //!< Is this texture owned by a framebuffer object?
+    bool         m_hasMipmap;     //!< Has the mipmap been generated?
+    Uint64       m_cacheId;       //!< Unique number that identifies the texture to the render target's cache
 };
 
 } // namespace sf

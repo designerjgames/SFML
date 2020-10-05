@@ -103,11 +103,14 @@ public:
     JoystickState update();
 
 private:
+    template<class T>
+    JoystickState updateInternal(T& xState);
+
     static float GetStickPosition(int x);
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    nn::hid::NpadIdType m_uControllerID;
+    unsigned int m_uControllerID;
 };
 
 } // namespace priv

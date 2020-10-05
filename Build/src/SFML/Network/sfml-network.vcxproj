@@ -175,7 +175,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sfml-network-s</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">sfml-network-s</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">sfml-network-s</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">sfml-network-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">sfml-network</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>

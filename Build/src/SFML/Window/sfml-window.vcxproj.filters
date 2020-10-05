@@ -69,6 +69,9 @@
     <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\InputImpl.cpp">
       <Filter>switch</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\EGLCheck.cpp" />
+    <ClCompile Include="..\..\..\..\src\SFML\Window\EglContext.cpp" />
+    <ClCompile Include="..\..\..\..\src\SFML\Window\glad.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Programming\Build2\SFML\include\SFML\Window\Clipboard.hpp" />
@@ -144,6 +147,8 @@
     <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\InputImpl.hpp">
       <Filter>switch</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\EGLCheck.hpp" />
+    <ClInclude Include="..\..\..\..\src\SFML\Window\EglContext.hpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Programming\Build2\SFML\src\SFML\Window\CMakeLists.txt" />

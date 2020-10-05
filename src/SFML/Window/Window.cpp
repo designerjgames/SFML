@@ -31,6 +31,10 @@
 #include <SFML/System/Sleep.hpp>
 #include <SFML/System/Err.hpp>
 
+#ifdef __SWITCH__
+#include <nn/vi.h>
+#endif
+
 namespace sf
 {
 ////////////////////////////////////////////////////////////
@@ -64,12 +68,15 @@ m_frameTimeLimit(Time::Zero)
 Window::~Window()
 {
     close();
+
+#ifdef __SWITCH__
+    nn::vi::Finalize();
+#endif
 }
 
 ////////////////////////////////////////////////////////////
 void Window::create(VideoMode mode, const String& title, Uint32 style, const ContextSettings* settings /*=nullptr*/)
 {
-    
     // Destroy the previous window implementation
     close();
 

@@ -238,10 +238,10 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|NX64'">sfml-graphics-s-d</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">.a</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|NX64'">.a</TargetExt>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release BGFX|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
@@ -253,7 +253,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sfml-graphics-s</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">sfml-graphics</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">sfml-graphics-s</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">sfml-graphics-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">sfml-graphics</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release BGFX|Win32'">sfml-graphics-s</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release BGFX|x64'">sfml-graphics-s</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release BGFX|NX64'">sfml-graphics-s</TargetName>
@@ -261,11 +261,11 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">.a</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">.a</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release BGFX|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release BGFX|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release BGFX|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release BGFX|NX64'">.a</TargetExt>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Programming\Build2\SFML\Build\lib\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">sfml-graphics.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">sfml-graphics-s</TargetName>
@@ -273,7 +273,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">sfml-graphics-s</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">.a</TargetExt>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Programming\Build2\SFML\Build\lib\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">sfml-graphics.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">sfml-graphics-s</TargetName>
@@ -281,7 +281,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">sfml-graphics-s</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">.a</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>C:\Programming\Build2\SFML\Build\lib\x64</OutDir>
@@ -686,7 +686,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Programming\Build2\SFML\include;C:\Programming\Build2\SFML\src;C:\Programming\Build2\SFML\extlibs\headers\stb_image;C:\Programming\Build2\SFML\extlibs\headers\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Programming\Build2\SFML\include;C:\Programming\Build2\SFML\src;C:\Programming\Build2\SFML\extlibs\headers\stb_image;C:\Programming\Build2\SFML\extlibs\headers\freetype2;C:\Programming\Build2\SFML\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -697,7 +697,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SFML_STATIC;STBI_FAILURE_USERMSG;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__SWITCH__;NDEBUG;SFML_STATIC;STBI_FAILURE_USERMSG;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>

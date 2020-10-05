@@ -74,7 +74,7 @@ WindowBase::~WindowBase()
 
 
 ////////////////////////////////////////////////////////////
-void WindowBase::create(VideoMode mode, const String& title, Uint32 style)
+void WindowBase::create(VideoMode mode, const String& title, Uint32 style, const ContextSettings* settings /*= nullptr*/)
 {
     // Destroy the previous window implementation
     close();
@@ -122,7 +122,7 @@ void WindowBase::create(VideoMode mode, const String& title, Uint32 style)
 
 
 ////////////////////////////////////////////////////////////
-void WindowBase::create(WindowHandle handle)
+void WindowBase::create(WindowHandle handle, const ContextSettings* settings /*= nullptr*/)
 {
     // Destroy the previous window implementation
     close();

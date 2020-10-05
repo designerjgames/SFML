@@ -31,6 +31,8 @@
 #include <iostream>
 #include <cassert>
 
+#define THREAD_STACK_SIZE  (2097152) // 2MB
+
 namespace sf
 {
 namespace priv
@@ -42,7 +44,7 @@ ThreadImpl::ThreadImpl(Thread* owner)
 , m_isActive(true)
 {
 #if defined( NN_BUILD_TARGET_PLATFORM_OS_NN ) && defined( NN_BUILD_APISET_NX )
-    m_ThreadStack = aligned_alloc(nn::os::ThreadStackAlignment, m_ThreadstackSize);
+    m_ThreadStack = aligned_alloc(nn::os::ThreadStackAlignment, THREAD_STACK_SIZE);
 #else
     m_ThreadStack = _aligned_malloc(THREAD_STACK_SIZE, nn::os::ThreadStackAlignment);
 #endif

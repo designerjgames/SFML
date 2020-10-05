@@ -179,7 +179,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">sfml-window-s-d</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">.a</TargetExt>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sfml-window.dir\Release\</IntDir>
@@ -189,13 +189,13 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">sfml-window-s</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">sfml-window</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">sfml-window-s</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">sfml-window-s</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">sfml-window</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">.a</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">.a</TargetExt>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Programming\Build2\SFML\Build\lib\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">sfml-window.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">sfml-window-s</TargetName>
@@ -203,7 +203,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">sfml-window-s</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">.a</TargetExt>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Programming\Build2\SFML\Build\lib\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">sfml-window.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">sfml-window-s</TargetName>
@@ -211,7 +211,7 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">sfml-window-s</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">.a</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>C:\Programming\Build2\SFML\Build\lib\x64</OutDir>
@@ -508,7 +508,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Programming\Build2\SFML\include;C:\Programming\Build2\SFML\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Programming\Build2\SFML\include;C:\Programming\Build2\SFML\src;C:\Programming\Build2\SFML\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -519,7 +519,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__SWITCH__;NDEBUG;SFML_STATIC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;UNICODE;_UNICODE;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
@@ -950,6 +950,40 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\SFML\Window\Vulkan.hpp" />
     <ClInclude Include="..\..\..\..\include\SFML\Window\WindowBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\SFML\Window\EGLCheck.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\SFML\Window\EglContext.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\SFML\Window\Switch\ClipboardImpl.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
@@ -971,8 +1005,60 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\..\..\..\src\SFML\Window\Win32\VulkanImplWin32.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="C:\Programming\Build2\SFML\include\SFML\Window\Clipboard.hpp" />
+    <ClCompile Include="..\..\..\..\src\SFML\Window\EGLCheck.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\EglContext.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\SFML\Window\glad.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\SFML\Window\Switch\ClipboardImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -998,6 +1084,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="..\..\..\..\src\SFML\Window\Win32\VulkanImplWin32.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\SFML\Window\WindowBase.cpp" />
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Clipboard.cpp" />
@@ -1043,70 +1130,87 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\CursorImpl.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\CursorImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\ClipboardImpl.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\ClipboardImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WglContext.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WglContext.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WglExtensions.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WglExtensions.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\InputImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\InputImpl.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\JoystickImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\JoystickImpl.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\SensorImpl.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\SensorImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\VideoModeImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WindowImplWin32.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="C:\Programming\Build2\SFML\src\SFML\Window\Win32\WindowImplWin32.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|NX64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug NX|NX64'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

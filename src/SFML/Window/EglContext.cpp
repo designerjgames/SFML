@@ -22,7 +22,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-
+#include <SFML/Config.hpp>
+#ifdef SFML_SYSTEM_SWITCH
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
@@ -42,18 +43,60 @@
 #define SF_GLAD_EGL_IMPLEMENTATION
 
 #if defined(SFML_SYSTEM_SWITCH)
-#include <switch.h>
 #include <EGL/egl.h>    // EGL library
 #include <EGL/eglext.h> // EGL extensions
-#include <glad/glad.h>  // glad library (OpenGL loader)
+//#include <glad/glad.h> // EGL extensions
 
-static int gladLoaderLoadEGL(EGLDisplay display)
-{
-    return gladLoadGL();
-}
+////////static int gladLoaderLoadEGL(EGLDisplay display)
+////////{
+////////    return gladLoadGL();
+////////}
+
+#include <nn/vi.h>
+#include <nn/nn_Assert.h>
+
+#if defined( NN_BUILD_TARGET_PLATFORM_OS_NN ) && defined( NN_BUILD_APISET_NX )
+#include <nv/nv_MemoryManagement.h>
+#endif
 
 #else
 #include <glad/egl.h>
+#endif
+
+#if defined( NN_BUILD_TARGET_PLATFORM_OS_NN ) && defined( NN_BUILD_APISET_NX )
+void* NvAllocateFunction(size_t size, size_t alignment, void* userPtr)
+{
+    NN_UNUSED(userPtr);
+    // According to specifications of aligned_alloc(), we need to coordinate the size parameter to become the integral multiple of alignment.
+    return aligned_alloc(alignment, nn::util::align_up(size, alignment));
+}
+void NvFreeFunction(void* addr, void* userPtr)
+{
+    NN_UNUSED(userPtr);
+    free(addr);
+}
+void* NvReallocateFunction(void* addr, size_t newSize, void* userPtr)
+{
+    NN_UNUSED(userPtr);
+    return realloc(addr, newSize);
+}
+
+void* NvDevtoolsAllocateFunction(size_t size, size_t alignment, void* userPtr)
+{
+    NN_UNUSED(userPtr);
+    // According to specifications of aligned_alloc(), we need to coordinate the size parameter to become the integral multiple of alignment.
+    return aligned_alloc(alignment, nn::util::align_up(size, alignment));
+}
+void NvDevtoolsFreeFunction(void* addr, void* userPtr)
+{
+    NN_UNUSED(userPtr);
+    free(addr);
+}
+void* NvDevtoolsReallocateFunction(void* addr, size_t newSize, void* userPtr)
+{
+    NN_UNUSED(userPtr);
+    return realloc(addr, newSize);
+}
 #endif
 
 namespace
@@ -90,15 +133,47 @@ namespace
         static bool initialized = false;
         if (!initialized)
         {
+            /*
+            * Set memory allocator for graphics subsystem.
+            * This function must be called before using any graphics API's.
+            */
+            nv::SetGraphicsAllocator(NvAllocateFunction, NvFreeFunction, NvReallocateFunction, NULL);
+
+            /*
+             * Set memory allocator for graphics developer tools and NVN debug layer.
+             * This function must be called before using any graphics developer features.
+             */
+            nv::SetGraphicsDevtoolsAllocator(NvDevtoolsAllocateFunction, NvDevtoolsFreeFunction, NvDevtoolsReallocateFunction, NULL);
+            /*
+             * Donate memory for graphics driver to work in.
+             * This function must be called before using any graphics API's.
+             */
+            size_t graphicsSystemMemorySize = 8 * 1024 * 1024;
+            void* graphicsHeap = malloc(graphicsSystemMemorySize);
+            nv::InitializeGraphics(graphicsHeap, graphicsSystemMemorySize);
+
+            /*
+             * Initialize Video Interface (VI) system to display
+             * to the target's screen
+             */
+            nn::vi::Initialize();
+
             initialized = true;
-
-            // We don't check the return value since the extension
-            // flags are cleared even if loading fails
-            gladLoaderLoadEGL(EGL_NO_DISPLAY);
-
-            // Continue loading with a display
-            gladLoaderLoadEGL(getInitializedDisplay());
         }
+        //////static bool initialized = false;
+        //////if (!initialized)
+        //////{
+        //////    initialized = true;
+
+        //////    // We don't check the return value since the extension
+        //////    // flags are cleared even if loading fails
+        //////    gladLoaderLoadEGL(EGL_NO_DISPLAY);
+
+        //////    // Continue loading with a display
+        //////    gladLoaderLoadEGL(getInitializedDisplay());
+        //////}
+
+        getInitializedDisplay();
     }
 }
 
@@ -164,7 +239,7 @@ m_config  (NULL)
     createContext(shared);
 
 #if defined(SFML_SYSTEM_SWITCH)
-    createSurface(nwindowGetDefault());
+    createSurface((EGLNativeWindowType)owner->getSystemHandle());
 
 #elif !defined(SFML_SYSTEM_ANDROID)
     // Create EGL surface (except on Android because the window is created
@@ -429,3 +504,4 @@ XVisualInfo EglContext::selectBestVisual(::Display* XDisplay, unsigned int bitsP
 } // namespace priv
 
 } // namespace sf
+#endif

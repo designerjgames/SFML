@@ -48,7 +48,11 @@ public:
     ////////////////////////////////////////////////////////////
     enum
     {
+#ifdef __SWITCH__
+        Count       = 9,  //!< Maximum number of supported joysticks
+#else
         Count       = 8,  //!< Maximum number of supported joysticks
+#endif
         ButtonCount = 32, //!< Maximum number of supported buttons
         AxisCount   = 8   //!< Maximum number of supported axes
     };

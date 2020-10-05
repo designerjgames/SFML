@@ -45,7 +45,7 @@ namespace priv
 /// \brief Utility class to manipulate threads
 ///
 ////////////////////////////////////////////////////////////
-class SFML_SYSTEM_API Thread : NonCopyable
+class SFML_SYSTEM_API Thread// : NonCopyable
 {
 public:
 

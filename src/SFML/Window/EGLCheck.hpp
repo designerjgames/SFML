@@ -25,6 +25,8 @@
 #ifndef SFML_EGLCHECK_HPP
 #define SFML_EGLCHECK_HPP
 
+#include <SFML/Config.hpp>
+#ifdef SFML_SYSTEM_SWITCH
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
@@ -65,5 +67,5 @@ void eglCheckError(const char* file, unsigned int line, const char* expression);
 } // namespace priv
 } // namespace sf
 
-
+#endif
 #endif // SFML_EGLCHECK_HPP

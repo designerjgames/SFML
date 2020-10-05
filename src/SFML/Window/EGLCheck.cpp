@@ -22,7 +22,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-
+#include <SFML/Config.hpp>
+#ifdef SFML_SYSTEM_SWITCH
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
@@ -30,7 +31,7 @@
 #include <SFML/System/Err.hpp>
 
 #if defined(SFML_SYSTEM_SWITCH)
-#include "/opt/devkitpro/portlibs/switch/include/EGL/egl.h"
+#include <EGL/egl.h>
 #else
 #include <glad/egl.h>
 #endif
@@ -166,3 +167,4 @@ void eglCheckError(const char* file, unsigned int line, const char* expression)
 
 } // namespace priv
 } // namespace sf
+#endif

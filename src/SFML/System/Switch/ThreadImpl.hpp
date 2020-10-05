@@ -32,8 +32,6 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <nn/os/os_ThreadTypes.h>
 
-#define THREAD_STACK_SIZE 8192
-
 namespace sf
 {
 class Thread;

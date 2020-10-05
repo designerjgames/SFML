@@ -96,15 +96,28 @@ bool JoystickImpl::isConnected(unsigned int index)
 {
     assert(index < NN_ARRAY_SIZE(NpadIds));
 
-    nn::hid::NpadFullKeyState state;
-    nn::hid::GetNpadState(&state, static_cast<nn::hid::NpadIdType>(index));
+    if (nn::hid::GetNpadStyleSet(NpadIds[index]).Test<nn::hid::NpadStyleHandheld>())
+    {
+        nn::hid::NpadHandheldState state;
+        nn::hid::GetNpadState(&state, NpadIds[index]);
 
-    return state.attributes.Test<nn::hid::NpadAttribute::IsConnected>();
+        return state.attributes.Test<nn::hid::NpadAttribute::IsConnected>();
+    }
+    else if(nn::hid::GetNpadStyleSet(NpadIds[index]).Test<nn::hid::NpadStyleJoyDual>())
+    {
+        nn::hid::NpadJoyDualState state;
+        nn::hid::GetNpadState(&state, NpadIds[index]);
+
+        return state.attributes.Test<nn::hid::NpadAttribute::IsConnected>();
+    }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////
 bool JoystickImpl::open(unsigned int index)
 {
+    m_uControllerID = index;
     return true;
 }
 
@@ -137,36 +150,51 @@ Joystick::Identification JoystickImpl::getIdentification() const
 ////////////////////////////////////////////////////////////
 JoystickState JoystickImpl::update()
 {
+    nn::hid::NpadHandheldState xHandheldState;
+    nn::hid::NpadJoyDualState  xDualJoyState;
+    if (nn::hid::GetNpadStyleSet(NpadIds[m_uControllerID]).Test<nn::hid::NpadStyleHandheld>())
+    {
+        nn::hid::GetNpadState(&xHandheldState, NpadIds[m_uControllerID]);
+        return updateInternal<nn::hid::NpadHandheldState>(xHandheldState);
+    }
+    else if (nn::hid::GetNpadStyleSet(NpadIds[m_uControllerID]).Test<nn::hid::NpadStyleJoyDual>())
+    {
+        nn::hid::GetNpadState(&xDualJoyState, NpadIds[m_uControllerID]);
+        return updateInternal<nn::hid::NpadJoyDualState>(xDualJoyState);
+    }
+
+    return JoystickState();
+}
+
+template<class T>
+JoystickState JoystickImpl::updateInternal(T& xState)
+{
     auto sfmlState = JoystickState();
-
-    nn::hid::NpadFullKeyState state;
-    nn::hid::GetNpadState(&state, m_uControllerID);
-
-    sfmlState.buttons[NX_CONTROLLER_KEYS_A]      = state.buttons.Test<nn::hid::NpadButton::A>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_B]      = state.buttons.Test<nn::hid::NpadButton::B>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_X]      = state.buttons.Test<nn::hid::NpadButton::X>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_Y]      = state.buttons.Test<nn::hid::NpadButton::Y>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_LSTICK] = state.buttons.Test<nn::hid::NpadButton::StickL>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_RSTICK] = state.buttons.Test<nn::hid::NpadButton::StickR>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_L]      = state.buttons.Test<nn::hid::NpadButton::L>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_R]      = state.buttons.Test<nn::hid::NpadButton::R>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_ZL]     = state.buttons.Test<nn::hid::NpadButton::ZL>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_ZR]     = state.buttons.Test<nn::hid::NpadButton::ZR>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_PLUS]   = state.buttons.Test<nn::hid::NpadButton:: Plus>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_MINUS]  = state.buttons.Test<nn::hid::NpadButton:: Minus>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_DLEFT]  = state.buttons.Test<nn::hid::NpadButton:: Left>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_DUP]    = state.buttons.Test<nn::hid::NpadButton:: Up>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_DRIGHT] = state.buttons.Test<nn::hid::NpadButton:: Right>();
-    sfmlState.buttons[NX_CONTROLLER_KEYS_DDOWN]  = state.buttons.Test<nn::hid::NpadButton:: Down>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_A]      = xState.buttons.template Test<nn::hid::NpadButton::A>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_B]      = xState.buttons.template Test<nn::hid::NpadButton::B>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_X]      = xState.buttons.template Test<nn::hid::NpadButton::X>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_Y]      = xState.buttons.template Test<nn::hid::NpadButton::Y>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_LSTICK] = xState.buttons.template Test<nn::hid::NpadButton::StickL>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_RSTICK] = xState.buttons.template Test<nn::hid::NpadButton::StickR>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_L]      = xState.buttons.template Test<nn::hid::NpadButton::L>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_R]      = xState.buttons.template Test<nn::hid::NpadButton::R>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_ZL]     = xState.buttons.template Test<nn::hid::NpadButton::ZL>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_ZR]     = xState.buttons.template Test<nn::hid::NpadButton::ZR>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_PLUS]   = xState.buttons.template Test<nn::hid::NpadButton::Plus>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_MINUS]  = xState.buttons.template Test<nn::hid::NpadButton::Minus>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_DLEFT]  = xState.buttons.template Test<nn::hid::NpadButton::Left>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_DUP]    = xState.buttons.template Test<nn::hid::NpadButton::Up>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_DRIGHT] = xState.buttons.template Test<nn::hid::NpadButton::Right>();
+    sfmlState.buttons[NX_CONTROLLER_KEYS_DDOWN]  = xState.buttons.template Test<nn::hid::NpadButton::Down>();
 
     // Correlates with the input coordinates of the Left Stick.
-    sfmlState.axes[Joystick::X] =  GetStickPosition(state.analogStickL.x);
-    sfmlState.axes[Joystick::Y] = -GetStickPosition(state.analogStickL.y);
+    sfmlState.axes[Joystick::X] =  GetStickPosition(xState.analogStickL.x);
+    sfmlState.axes[Joystick::Y] = -GetStickPosition(xState.analogStickL.y);
 
-    sfmlState.axes[Joystick::U] = GetStickPosition(state.analogStickR.x);
-    sfmlState.axes[Joystick::V] = GetStickPosition(state.analogStickR.y);
+    sfmlState.axes[Joystick::U] = GetStickPosition(xState.analogStickR.x);
+    sfmlState.axes[Joystick::V] = GetStickPosition(xState.analogStickR.y);
 
-    sfmlState.connected = state.attributes.Test<nn::hid::NpadAttribute::IsConnected>();
+    sfmlState.connected = xState.attributes.template Test<nn::hid::NpadAttribute::IsConnected>();
 
     return sfmlState;
 }

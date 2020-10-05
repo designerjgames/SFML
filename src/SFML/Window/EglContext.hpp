@@ -25,6 +25,8 @@
 #ifndef SFML_EGLCONTEXT_HPP
 #define SFML_EGLCONTEXT_HPP
 
+#include <SFML/Config.hpp>
+#ifdef SFML_SYSTEM_SWITCH
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
@@ -205,5 +207,5 @@ private:
 
 } // namespace sf
 
-
+#endif
 #endif // SFML_EGLCONTEXT_HPP

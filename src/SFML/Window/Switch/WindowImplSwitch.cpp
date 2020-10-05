@@ -34,6 +34,10 @@
 #include <nn/vi.h>
 #include <nn/nn_Assert.h>
 
+#if defined( NN_BUILD_TARGET_PLATFORM_OS_NN ) && defined( NN_BUILD_APISET_NX )
+#include <nv/nv_MemoryManagement.h>
+#endif
+
 ////////////////////////////////////////////////////////////
 // Private data
 ////////////////////////////////////////////////////////////
@@ -43,41 +47,41 @@ namespace priv
 {
 WindowImplSwitch* WindowImplSwitch::singleInstance = NULL;
 
-#if defined( NN_BUILD_TARGET_PLATFORM_OS_NN ) && defined( NN_BUILD_APISET_NX )
-void* NvAllocateFunction(size_t size, size_t alignment, void* userPtr)
-{
-    NN_UNUSED(userPtr);
-    // According to specifications of aligned_alloc(), we need to coordinate the size parameter to become the integral multiple of alignment.
-    return aligned_alloc(alignment, nn::util::align_up(size, alignment));
-}
-void NvFreeFunction(void* addr, void* userPtr)
-{
-    NN_UNUSED(userPtr);
-    free(addr);
-}
-void* NvReallocateFunction(void* addr, size_t newSize, void* userPtr)
-{
-    NN_UNUSED(userPtr);
-    return realloc(addr, newSize);
-}
-
-void* NvDevtoolsAllocateFunction(size_t size, size_t alignment, void* userPtr)
-{
-    NN_UNUSED(userPtr);
-    // According to specifications of aligned_alloc(), we need to coordinate the size parameter to become the integral multiple of alignment.
-    return aligned_alloc(alignment, nn::util::align_up(size, alignment));
-}
-void NvDevtoolsFreeFunction(void* addr, void* userPtr)
-{
-    NN_UNUSED(userPtr);
-    free(addr);
-}
-void* NvDevtoolsReallocateFunction(void* addr, size_t newSize, void* userPtr)
-{
-    NN_UNUSED(userPtr);
-    return realloc(addr, newSize);
-}
-#endif
+//#if defined( NN_BUILD_TARGET_PLATFORM_OS_NN ) && defined( NN_BUILD_APISET_NX )
+//void* NvAllocateFunction(size_t size, size_t alignment, void* userPtr)
+//{
+//    NN_UNUSED(userPtr);
+//    // According to specifications of aligned_alloc(), we need to coordinate the size parameter to become the integral multiple of alignment.
+//    return aligned_alloc(alignment, nn::util::align_up(size, alignment));
+//}
+//void NvFreeFunction(void* addr, void* userPtr)
+//{
+//    NN_UNUSED(userPtr);
+//    free(addr);
+//}
+//void* NvReallocateFunction(void* addr, size_t newSize, void* userPtr)
+//{
+//    NN_UNUSED(userPtr);
+//    return realloc(addr, newSize);
+//}
+//
+//void* NvDevtoolsAllocateFunction(size_t size, size_t alignment, void* userPtr)
+//{
+//    NN_UNUSED(userPtr);
+//    // According to specifications of aligned_alloc(), we need to coordinate the size parameter to become the integral multiple of alignment.
+//    return aligned_alloc(alignment, nn::util::align_up(size, alignment));
+//}
+//void NvDevtoolsFreeFunction(void* addr, void* userPtr)
+//{
+//    NN_UNUSED(userPtr);
+//    free(addr);
+//}
+//void* NvDevtoolsReallocateFunction(void* addr, size_t newSize, void* userPtr)
+//{
+//    NN_UNUSED(userPtr);
+//    return realloc(addr, newSize);
+//}
+//#endif
 
 ////////////////////////////////////////////////////////////
 WindowImplSwitch::WindowImplSwitch(WindowHandle handle)
@@ -103,38 +107,38 @@ WindowImplSwitch::WindowImplSwitch(VideoMode mode, const String& title, unsigned
     xLCS.SetFullscreen(style & Style::Fullscreen);
 
 #if defined( NN_BUILD_TARGET_PLATFORM_OS_NN ) && defined( NN_BUILD_APISET_NX )
-    /*
- * Set memory allocator for graphics subsystem.
- * This function must be called before using any graphics API's.
- */
-    nv::SetGraphicsAllocator(NvAllocateFunction, NvFreeFunction, NvReallocateFunction, NULL);
+ //   /*
+ //* Set memory allocator for graphics subsystem.
+ //* This function must be called before using any graphics API's.
+ //*/
+ //   nv::SetGraphicsAllocator(NvAllocateFunction, NvFreeFunction, NvReallocateFunction, NULL);
 
-    /*
-     * Set memory allocator for graphics developer tools and NVN debug layer.
-     * This function must be called before using any graphics developer features.
-     */
-    nv::SetGraphicsDevtoolsAllocator(NvDevtoolsAllocateFunction, NvDevtoolsFreeFunction, NvDevtoolsReallocateFunction, NULL);
-    /*
-     * Donate memory for graphics driver to work in.
-     * This function must be called before using any graphics API's.
-     */
-    size_t graphicsSystemMemorySize = 8 * 1024 * 1024;
-    void* graphicsHeap = malloc(graphicsSystemMemorySize);
-    nv::InitializeGraphics(graphicsHeap, graphicsSystemMemorySize);
+ //   /*
+ //    * Set memory allocator for graphics developer tools and NVN debug layer.
+ //    * This function must be called before using any graphics developer features.
+ //    */
+ //   nv::SetGraphicsDevtoolsAllocator(NvDevtoolsAllocateFunction, NvDevtoolsFreeFunction, NvDevtoolsReallocateFunction, NULL);
+ //   /*
+ //    * Donate memory for graphics driver to work in.
+ //    * This function must be called before using any graphics API's.
+ //    */
+ //   size_t graphicsSystemMemorySize = 8 * 1024 * 1024;
+ //   void* graphicsHeap              = malloc(graphicsSystemMemorySize);
+ //   nv::InitializeGraphics(graphicsHeap, graphicsSystemMemorySize);
 
-    /*
-     * Initialize Video Interface (VI) system to display
-     * to the target's screen
-     */
-    nn::vi::Initialize();
+ //   /*
+ //    * Initialize Video Interface (VI) system to display
+ //    * to the target's screen
+ //    */
+ //   nn::vi::Initialize();
 
-    nn::Result result = nn::vi::OpenDefaultDisplay(&s_pDisplay);
+    nn::Result result = nn::vi::OpenDefaultDisplay(&m_pDisplay);
     NN_ASSERT(result.IsSuccess());
 
-    result = nn::vi::CreateLayer(&s_pLayer, s_pDisplay);
+    result = nn::vi::CreateLayer(&m_pLayer, m_pDisplay);
     NN_ASSERT(result.IsSuccess());
 
-    result = nn::vi::GetNativeWindow(&m_window, s_pLayer);
+    result = nn::vi::GetNativeWindow(&m_window, m_pLayer);
     NN_ASSERT(result.IsSuccess());
 #else
     nn::vi::Initialize();
@@ -156,7 +160,6 @@ WindowImplSwitch::~WindowImplSwitch()
 {
     nn::vi::DestroyLayer(m_pLayer);
     nn::vi::CloseDisplay(m_pDisplay);
-    nn::vi::Finalize();
 }
 
 

@@ -28,6 +28,7 @@
 #include <SFML/Window/VideoModeImpl.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/Sleep.hpp>
+#include <nn/oe.h>
 namespace sf
 {
 namespace priv
@@ -44,10 +45,14 @@ std::vector<VideoMode> VideoModeImpl::getFullscreenModes()
 ////////////////////////////////////////////////////////////
 VideoMode VideoModeImpl::getDesktopMode()
 {
-    //NWindow* window = nwindowGetDefault();
-    //u32 width, height;
-    //nwindowGetDimensions(window, &width, &height);
-    return VideoMode(1280, 720);
+    // Initialize the application operating environment library.
+    //nn::oe::Initialize();
+
+    // Get the current default display resolution.
+    int width, height;
+    nn::oe::GetDefaultDisplayResolution(&width, &height);
+
+    return VideoMode(width, height);
 }
 
 } // namespace priv

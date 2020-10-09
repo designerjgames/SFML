@@ -31,7 +31,7 @@
 #include <iostream>
 #include <cassert>
 
-#define THREAD_STACK_SIZE  (2097152) // 2MB
+#define THREAD_STACK_SIZE  (4194304) // 4MB
 
 namespace sf
 {

@@ -110,6 +110,13 @@ bool JoystickImpl::isConnected(unsigned int index)
 
         return state.attributes.Test<nn::hid::NpadAttribute::IsConnected>();
     }
+    else if (nn::hid::GetNpadStyleSet(NpadIds[index]).Test<nn::hid::NpadStyleFullKey>())
+    {
+        nn::hid::NpadFullKeyState state;
+        nn::hid::GetNpadState(&state, NpadIds[index]);
+
+        return state.attributes.Test<nn::hid::NpadAttribute::IsConnected>();
+    }
 
     return false;
 }
@@ -152,6 +159,7 @@ JoystickState JoystickImpl::update()
 {
     nn::hid::NpadHandheldState xHandheldState;
     nn::hid::NpadJoyDualState  xDualJoyState;
+    nn::hid::NpadFullKeyState  xFullKeyState;
     if (nn::hid::GetNpadStyleSet(NpadIds[m_uControllerID]).Test<nn::hid::NpadStyleHandheld>())
     {
         nn::hid::GetNpadState(&xHandheldState, NpadIds[m_uControllerID]);
@@ -161,6 +169,11 @@ JoystickState JoystickImpl::update()
     {
         nn::hid::GetNpadState(&xDualJoyState, NpadIds[m_uControllerID]);
         return updateInternal<nn::hid::NpadJoyDualState>(xDualJoyState);
+    }
+    else if (nn::hid::GetNpadStyleSet(NpadIds[m_uControllerID]).Test<nn::hid::NpadStyleFullKey>())
+    {
+        nn::hid::GetNpadState(&xFullKeyState, NpadIds[m_uControllerID]);
+        return updateInternal<nn::hid::NpadFullKeyState>(xFullKeyState);
     }
 
     return JoystickState();

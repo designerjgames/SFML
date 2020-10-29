@@ -281,11 +281,11 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|Win32'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|x64'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug BGFX|NX64'">.a</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Public|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release BGFX|Win32'">C:\Programming\Build2\SFML\Build\lib\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sfml-graphics.dir\Release\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug NX|Win32'">sfml-graphics.dir\Release\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Public|Win32'">sfml-graphics.dir\Release\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release BGFX|Win32'">sfml-graphics.dir\Release\</IntDir>
@@ -558,22 +558,37 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Programming\Build2\SFML\include;C:\Programming\Build2\SFML\src;C:\Programming\Build2\SFML\extlibs\headers\stb_image;C:\Programming\Build2\SFML\extlibs\headers\freetype2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Programming\Build2\SFML\include;C:\Programming\Build2\SFML\src;C:\Programming\Build2\SFML\extlibs\headers\stb_image;C:\Programming\Build2\SFML\extlibs\headers\freetype2;C:\Programming\Build2\SFML\extlibs\headers\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <CompileAs>CompileAsCpp</CompileAs>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <CompileAs>Default</CompileAs>
+      <ExceptionHandling>Async</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SFML_STATIC;STBI_FAILURE_USERMSG;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat>
-      </DebugInformationFormat>
-      <ProgramDataBaseFileName>C:\Programming\Build2\SFML\Build\lib\Release\sfml-graphics-s.pdb</ProgramDataBaseFileName>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)sfml-graphics-s.pdb</ProgramDataBaseFileName>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <CreateHotpatchableImage>false</CreateHotpatchableImage>
+      <GuardEHContMetadata>false</GuardEHContMetadata>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <CompileAsManaged>false</CompileAsManaged>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SFML_STATIC;STBI_FAILURE_USERMSG;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
